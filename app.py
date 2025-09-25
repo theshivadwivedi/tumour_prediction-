@@ -8,20 +8,22 @@ import gdown
 import matplotlib.pyplot as plt
 
 # ------------------------------
-# Download model from Google Drive if not present
+# Download model from Google Drive if missing
 # ------------------------------
-MODEL_PATH = "brain_tumor_model.h5"
-FILE_ID = "1ZRjhKm7KspDNUF7HcaFxm47StPp_Acxd"
+MODEL_PATH = "brain_tumor_model.h5"  # local path
+FILE_ID = "1ywdCfQsYOTmfEeywv8qE-9dSIiJvj2bc"  # your Drive file ID
 URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model from Google Drive..."):
-        gdown.download(URL, MODEL_PATH, quiet=False)
+        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
 
 # Load the model
 model = load_model(MODEL_PATH)
 
+# ------------------------------
 # Class names and colors
+# ------------------------------
 class_names = ["glioma_tumor", "meningioma_tumor", "no_tumor", "pituitary_tumor"]
 class_colors = {
     "glioma_tumor": "#FF9999",
@@ -34,9 +36,9 @@ class_colors = {
 # Streamlit UI
 # ------------------------------
 st.title("🧠 Brain Tumor MRI Classification")
-st.write("Upload one or more MRI images and see predictions with confidence graphs.")
+st.write("Upload MRI images and see predictions with confidence charts.")
 
-# Sidebar legend with spacing
+# Sidebar legend
 st.sidebar.header("Tumor Types Legend")
 for tumor, color in class_colors.items():
     st.sidebar.markdown(
@@ -52,12 +54,13 @@ for tumor, color in class_colors.items():
         unsafe_allow_html=True
     )
 
+# File uploader
 uploaded_files = st.file_uploader(
     "Choose MRI images...", type=["jpg", "png", "jpeg"], accept_multiple_files=True
 )
 
 # ------------------------------
-# Process each uploaded image
+# Process uploaded images
 # ------------------------------
 if uploaded_files:
     for uploaded_file in uploaded_files:
