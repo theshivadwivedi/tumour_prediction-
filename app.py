@@ -3,24 +3,23 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import tempfile
-import zipfile
 import os
+import gdown
 import matplotlib.pyplot as plt
 
 # ------------------------------
-# Extract compressed model
+# Download model from Google Drive if not present
 # ------------------------------
-zip_file = "brain_tumor_model.zip"
-model_folder = "model_folder"
+MODEL_PATH = "brain_tumor_model.h5"
+FILE_ID = "1ZRjhKm7KspDNUF7HcaFxm47StPp_Acxd"
+URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
-if not os.path.exists(model_folder):
-    os.makedirs(model_folder)
-    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-        zip_ref.extractall(model_folder)
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading model from Google Drive..."):
+        gdown.download(URL, MODEL_PATH, quiet=False)
 
 # Load the model
-model_path = os.path.join(model_folder, "brain_tumor_model.h5")
-model = load_model(model_path)
+model = load_model(MODEL_PATH)
 
 # Class names and colors
 class_names = ["glioma_tumor", "meningioma_tumor", "no_tumor", "pituitary_tumor"]
