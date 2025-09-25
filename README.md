@@ -20,3 +20,10 @@ The app also provides prediction confidence and visualization charts for better 
 ---
 
 ## 📂 Project Structure
+
+tumour_prediction/
+│
+├── app.py # Streamlit app
+├── brain_tumor_model.zip # Pre-trained model (compressed)
+├── requirements.txt # Dependencies
+├── README.md # Project documentation
