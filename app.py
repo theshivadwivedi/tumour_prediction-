@@ -5,21 +5,25 @@ from tensorflow.keras.preprocessing import image
 import tempfile
 import os
 import gdown
+import zipfile
 import matplotlib.pyplot as plt
 
 # ------------------------------
-# Download model from Google Drive if missing
+# Download and unzip SavedModel from Google Drive
 # ------------------------------
-MODEL_PATH = "brain_tumor_model.h5"  # local path
-FILE_ID = "1ywdCfQsYOTmfEeywv8qE-9dSIiJvj2bc"  # your Drive file ID
+MODEL_FOLDER = "brain_tumor_model_savedmodel"
+ZIP_PATH = "brain_tumor_model_savedmodel.zip"
+FILE_ID = "16nMSYTxVdWbXO--3kWs1rXQ8uJ4wyrXM"  # your Drive file ID
 URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
-if not os.path.exists(MODEL_PATH):
+if not os.path.exists(MODEL_FOLDER):
     with st.spinner("Downloading model from Google Drive..."):
-        gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
+        gdown.download(URL, ZIP_PATH, quiet=False, fuzzy=True)
+    with zipfile.ZipFile(ZIP_PATH, 'r') as zip_ref:
+        zip_ref.extractall(MODEL_FOLDER)
 
 # Load the model
-model = load_model(MODEL_PATH)
+model = load_model(MODEL_FOLDER)
 
 # ------------------------------
 # Class names and colors
